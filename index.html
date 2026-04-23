@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta content="initial-scale=1.0,width=device-width" name="viewport">
+
+	<title>Your title here</title>
+
+	<link href="css/reset.css" rel="stylesheet" type="text/css">
+	<link href="css/styles.css" rel="stylesheet" type="text/css">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+
+	<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+	<link rel="manifest" href="/site.webmanifest" />
+	<script src="js/scripts.js"></script>
+</head>
+
+<body>
+
+	<div class="background-text">
+		<span class="bg-line">Selina's</span>
+		<span class="bg-line">Works</span>
+		<span class="bg-line">Art &amp;</span>
+		<span class="bg-line">Design</span>
+		<footer class="bg-footer">
+			<span class="bg-footer__logo-group">
+				<img src="favicon/favicon.svg" alt="logo" class="bg-footer__logo">
+				<span>Selina</span>
+			</span>
+			<span>Interactive Prototyping 2</span>
+			<span>Spring 2026</span>
+		</footer>
+	</div>
+
+	<div class="project1">
+		<p class="project_title">PROJECT 1</p>
+		<a href="https://zymselina1116-bit.github.io/project1.ixp2/" class="project1_link">
+			<img src="images/project1.png">
+		</a>
+	</div>
+
+	<div class="project2">
+		<p class="project_title">PROJECT 2</p>
+		<a href="http://project2.ixp2.zhaoyimeng.com/" class="project2_link">
+			<img src="images/project2.png">
+		</a>
+	</div>
+
+	<div class="project3">
+		<p class="project_title">PROJECT 3</p>
+		<a href="https://project3.ixp.zhaoyimeng.com/" class="project3_link">
+			<img src="images/project3.png">
+		</a>
+	</div>
+
+	<div class="project4">
+		<p class="project_title">PROJECT 4</p>
+		<a href="http://project4.ixp2.zhaoyimeng.com/" class="project4_link">
+			<img src="images/project4.png">
+		</a>
+	</div>
+
+	<div class="finalproject">
+		<p class="project_title">FINAL PROJECT</p>
+		<a href="http://finalproject.ixp2.zhaoyimeng.com/" class="finalproject_link">
+			<img src="images/finalproject.png">
+		</a>
+	</div>
+
+
+	<canvas id="confetti-canvas"></canvas>
+
+	<script>
+	/* ── Footer fade on scroll ── */
+	(function () {
+		var footer = document.querySelector('.bg-footer');
+		window.addEventListener('scroll', function () {
+			var opacity = Math.max(0, 1 - window.scrollY / 150);
+			footer.style.opacity = opacity;
+		});
+	})();
+	</script>
+
+	<script>
+	(function () {
+		var canvas = document.getElementById('confetti-canvas');
+		var ctx    = canvas.getContext('2d');
+		var animId = null;
+		var COLORS = ['#FF6B6B','#FF9F43','#FECA57','#48DBFB','#FF9FF3',
+		              '#54A0FF','#C56BFF','#00D2D3','#1DD1A1','#FF6348'];
+
+		function resize() {
+			canvas.width  = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		resize();
+		window.addEventListener('resize', resize);
+
+		function Ribbon() { this.init(true); }
+		Ribbon.prototype.init = function (spread) {
+			this.x     = Math.random() * canvas.width;
+			this.y     = spread ? Math.random() * canvas.height
+			                    : canvas.height + 10 + Math.random() * 80;
+			this.w     = 5 + Math.random() * 9;
+			this.h     = 16 + Math.random() * 26;
+			this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+			// random direction: full 360°, speed 1.5–4
+			var speed  = 1.5 + Math.random() * 2.5;
+			var dir    = Math.random() * Math.PI * 2;
+			this.vx    = Math.cos(dir) * speed;
+			this.vy    = Math.sin(dir) * speed;
+			this.angle = Math.random() * Math.PI * 2;
+			this.angV  = (Math.random() - 0.5) * 0.1;
+			this.wave  = Math.random() * Math.PI * 2;
+		};
+		Ribbon.prototype.update = function () {
+			this.wave  += 0.055;
+			this.x     += this.vx + Math.sin(this.wave) * 0.4;
+			this.y     += this.vy;
+			this.angle += this.angV;
+			// respawn when it drifts off any edge
+			var W = canvas.width, H = canvas.height;
+			if (this.x < -60 || this.x > W + 60 || this.y < -60 || this.y > H + 60) {
+				this.init(false);
+			}
+		};
+		Ribbon.prototype.draw = function () {
+			ctx.save();
+			ctx.translate(this.x, this.y);
+			ctx.rotate(this.angle);
+			ctx.fillStyle = this.color;
+			ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+			ctx.restore();
+		};
+
+		var ribbons = [];
+		for (var i = 0; i < 110; i++) ribbons.push(new Ribbon());
+
+		function loop() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ribbons.forEach(function (r) { r.update(); r.draw(); });
+			animId = requestAnimationFrame(loop);
+		}
+		function start() { if (!animId) loop(); }
+		function stop()  {
+			if (animId) { cancelAnimationFrame(animId); animId = null; }
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+
+		canvas.addEventListener('transitionend', function () {
+			if (parseFloat(canvas.style.opacity) === 0) stop();
+		});
+
+		window.addEventListener('scroll', function () {
+			var ratio = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+			if (ratio > 0.82) {
+				start();
+				canvas.style.opacity = '1';
+			} else {
+				canvas.style.opacity = '0';
+			}
+		});
+	})();
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+/* ── Confetti canvas ──────────────────────────────────────────── */
+#confetti-canvas {
+	position: fixed;
+	inset: 0;
+	z-index: 5;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+/* ── Base ─────────────────────────────────────────────────────── */
+body {
+	background: #fff;
+	font-family: 'Quantico', sans-serif;
+	padding-bottom: 100vh;
+}
+
+/* ── Fixed background typography ─────────────────────────────── */
+.background-text {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	padding: 8vh 2.5vw 2.5vh;
+	background: #fff;
+	pointer-events: none;
+	user-select: none;
+	overflow: hidden;
+}
+
+.bg-line {
+	display: block;
+	font-weight: 700;
+	line-height: 1;
+	white-space: nowrap;
+	color: #000;
+}
+
+/* Each line sized to approximately fill the viewport width */
+.bg-line:nth-child(1) { font-size: 8vw; }
+.bg-line:nth-child(2) { font-size: 14vw; }
+.bg-line:nth-child(3) { font-size: 16vw; margin-top: 6vh; }
+.bg-line:nth-child(4) { font-size: 12vw; }
+
+/* ── Footer inside background (fades on scroll via JS) ────────── */
+.bg-footer {
+	position: absolute;
+	top: 1.5rem;
+	left: 1.5rem;
+	right: 1.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 1rem;
+	font-weight: 400;
+	letter-spacing: 0.05em;
+	color: #000;
+	background: rgba(255, 255, 255, 0.8);
+	padding: 0.75rem 2.5vw;
+	transition: opacity 0.3s ease;
+}
+
+.bg-footer__logo-group {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.bg-footer__logo {
+	height: 1.4rem;
+	width: auto;
+	display: block;
+}
+
+/* ── Project containers ───────────────────────────────────────── */
+.project1,
+.project2,
+.project3,
+.project4,
+.finalproject {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 20vw;
+}
+
+.project1        { margin-top: 9rem; }
+.project2,
+.project3,
+.project4,
+.finalproject    { margin-top: 7rem; }
+.finalproject    { margin-bottom: 9rem; }
+
+/* ── Image links ──────────────────────────────────────────────── */
+.project1_link,
+.project2_link,
+.project3_link,
+.project4_link,
+.finalproject_link {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.project1_link img,
+.project2_link img,
+.project3_link img,
+.project4_link img,
+.finalproject_link img {
+	display: block;
+	width: 100%;
+	box-shadow: 0 16px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* ── Hover overlay ────────────────────────────────────────────── */
+.project1_link::after,
+.project2_link::after,
+.project3_link::after,
+.project4_link::after,
+.finalproject_link::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: transparent;
+	transition: background 0.3s ease;
+	pointer-events: none;
+}
+
+.project1_link:hover::after,
+.project2_link:hover::after,
+.project3_link:hover::after,
+.project4_link:hover::after,
+.finalproject_link:hover::after {
+	background: rgba(0, 0, 0, 0.75);
+}
+
+/* ── Project title (shown on hover) ──────────────────────────── */
+.project_title {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #fff;
+	font-size: 1.25rem;
+	font-weight: 700;
+	letter-spacing: 0.2em;
+	text-align: center;
+	white-space: nowrap;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	z-index: 2;
+	pointer-events: none;
+}
+
+/* Show title when the image link is hovered */
+.project1:has(.project1_link:hover)           .project_title,
+.project2:has(.project2_link:hover)           .project_title,
+.project3:has(.project3_link:hover)           .project_title,
+.project4:has(.project4_link:hover)           .project_title,
+.finalproject:has(.finalproject_link:hover)   .project_title {
+	opacity: 1;
+}
